@@ -23,10 +23,11 @@
       config: require('../config.json'),
       package: {}
     };
+    console.log(fpl.config);
 
     // patch the pattern source so the pattern assembler can correctly determine
     // the "subdir"
-    fpl.config.patterns.source = './test/files/_handlebars-test-patterns';
+    fpl.config.paths.source.patterns = './test/files/_handlebars-test-patterns';
 
     return fpl;
   }
@@ -101,7 +102,7 @@
       // set up environment
       var patternlab = new fakePatternLab(); // environment
       var assembler = new pa();
-      
+
       // do all the normal processing of the pattern
       assembler.process_pattern_iterative(pattern1Path, patternlab);
       var helloWorldsPattern = assembler.process_pattern_iterative(pattern2Path, patternlab);
@@ -154,7 +155,7 @@
         '{{> myPartial name=../name }}'
       ]);
     },
-    
+
     'find_pattern_partials finds handlebars block partials': function(test){
       testFindPartials(test, [
         '{{#> myPartial }}'
