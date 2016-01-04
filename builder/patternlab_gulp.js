@@ -12,7 +12,7 @@ var patternlab_engine = require('./patternlab.js');
 
 module.exports = function(gulp) {
 
-  gulp.task('patternlab', ['clean'], function(cb){
+  gulp.task('patternlab', ['prelab'], function(cb){
     var patternlab = patternlab_engine();
     patternlab.build(false);
     cb();
