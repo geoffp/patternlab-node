@@ -1,11 +1,11 @@
-/** 
+/**
  * patternlab-node - v1.0.0 - 2015
- * 
+ *
  * Brian Muenzenmeyer, and the web community.
  * Licensed under the MIT license.
- * 
+ *
  * Many thanks to Brad Frost and Dave Olsen for inspiration, encouragement, and advice.
- * 
+ *
  **/var patternlab_engine = function () {
   'use strict';
 
@@ -98,7 +98,7 @@
           console.log(err);
           return;
         }
-        pattern_assembler.process_pattern_iterative(file.substring(2), patternlab);
+        pattern_assembler.process_pattern_iterative(path.resolve(file), patternlab);
     });
 
     //now that all the main patterns are known, look for any links that might be within data and expand them
@@ -123,7 +123,7 @@
           console.log(err);
           return;
         }
-        pattern_assembler.process_pattern_recursive(file.substring(2), patternlab);
+        pattern_assembler.process_pattern_recursive(path.resolve(file), patternlab);
       });
 
 

@@ -318,7 +318,7 @@
 						return;
 					}
 
-					pattern_assembler.process_pattern_iterative(file.substring(2), patternlab);
+					pattern_assembler.process_pattern_iterative(path.resolve(file), patternlab);
 				}
 			);
 
@@ -342,7 +342,7 @@
 						return;
 					}
 
-					pattern_assembler.process_pattern_recursive(file.substring(2), patternlab);
+					pattern_assembler.process_pattern_recursive(path.resolve(file), patternlab);
 				}
 			);
 
@@ -599,7 +599,7 @@
 						return;
 					}
 
-					pattern_assembler.process_pattern_iterative(file.substring(2), patternlab);
+					pattern_assembler.process_pattern_iterative(path.resolve(file), patternlab);
 				}
 			);
 
@@ -651,7 +651,7 @@
 						return;
 					}
 
-					pattern_assembler.process_pattern_iterative(file.substring(2), patternlab);
+					pattern_assembler.process_pattern_iterative(path.resolve(file), patternlab);
 				}
 			);
 
