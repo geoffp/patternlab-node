@@ -1,5 +1,5 @@
 /*
- * patternlab-node - v1.0.0 - 2015
+ * patternlab-node - v1.0.1 - 2015
  *
  * Brian Muenzenmeyer, and the web community.
  * Licensed under the MIT license.
@@ -82,8 +82,8 @@
       return this.engine.findListItems(this);
     },
 
-    getPartialKey: function (partialString) {
-      return this.engine.getPartialKey(this, partialString);
+    findPartialKey: function (partialString) {
+      return this.engine.findPartialKey(partialString);
     }
   };
 
