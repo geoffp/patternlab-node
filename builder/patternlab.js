@@ -6,7 +6,9 @@
  *
  * Many thanks to Brad Frost and Dave Olsen for inspiration, encouragement, and advice.
  *
- **/var patternlab_engine = function () {
+ */
+
+var patternlab_engine = function (config) {
   'use strict';
 
   var path = require('path'),
@@ -22,7 +24,7 @@
   patternlab = {};
 
   patternlab.package = fs.readJSONSync('./package.json');
-  patternlab.config = fs.readJSONSync('./config.json');
+  patternlab.config = config || fs.readJSONSync(path.resolve(__dirname, '../config.json'));
 
   var paths = patternlab.config.paths;
 
