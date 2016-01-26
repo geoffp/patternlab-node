@@ -94,7 +94,19 @@ gulp.task('cp:css', function(){
     .pipe(browserSync.stream());
 });
 
-//server and watch tasks
+// server and watch tasks
+
+// watch task utility functions
+function getSupportedTemplateExtensions() {
+  var engines = require('./builder/pattern_engines/pattern_engines');
+  return engines.getSupportedFileExtensions();
+}
+function getTemplateWatches() {
+  return getSupportedTemplateExtensions().map(function (dotExtension) {
+    return path.resolve(paths().source.patterns, '**/*' + dotExtension);
+  });
+}
+
 gulp.task('connect', ['lab'], function(){
   browserSync.init({
     server: {
@@ -107,16 +119,12 @@ gulp.task('connect', ['lab'], function(){
   // gulp.watch('./source/css/**/*.scss', ['sass:style']);
   // gulp.watch('./public/styleguide/*.scss', ['sass:styleguide']);
 
-  gulp.watch(
-    [
-      path.resolve(paths().source.patterns, '**/*.mustache'),
-      path.resolve(paths().source.patterns, '**/*.json'),
-      path.resolve(paths().source.data, '*.json')
-    ],
-    ['lab-pipe'],
-    function () { browserSync.reload(); }
-  );
+  var patternWatches = [
+    path.resolve(paths().source.patterns, '**/*.json'),
+    path.resolve(paths().source.data, '*.json')
+  ].concat(getTemplateWatches());
 
+  gulp.watch(patternWatches, ['lab-pipe'], function () { browserSync.reload(); });
 });
 
 //unit test
