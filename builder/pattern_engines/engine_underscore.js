@@ -13,6 +13,19 @@
 
   var _ = require('underscore');
 
+  // extend underscore with partial-ing methods
+  // HANDLESCORE! UNDERBARS!
+  _.mixin({
+    renderPartial: function(partial, data) {
+      var data = data || {};
+      var compiled = _.template(partial);
+      return compiled(data);
+    },
+    assignContext: function(viewModel, data) {
+      return viewModel(data);
+    }
+  });
+
   var engine_underscore = {
     engine: _,
     engineName: 'underscore',
@@ -33,13 +46,14 @@
       if (partials) {
         _.registerPartial(partials);
       }
-      var compiled = _.compile(template);
+      var compiled = _.template(template);
       return compiled(data);
     },
 
-    registerPartial: function (oPattern) {
-      _.registerPartial(oPattern.key, oPattern.template);
-    },
+    // registerPartial: function (oPattern) {
+    //   debugger;
+    //   _.registerPartial(oPattern.key, oPattern.template);
+    // },
 
     // find and return any {{> template-name }} within pattern
     findPartials: function findPartials(pattern) {
