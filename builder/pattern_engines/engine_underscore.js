@@ -8,6 +8,10 @@
  *
  */
 
+// SUPPORT LEVEL:
+// Basic. We can't call partials from inside underscore templates yet, but we
+// can render templates with backing JSON.
+
 (function () {
   "use strict";
 
@@ -36,9 +40,9 @@
     expandPartials: false,
 
     // regexes, stored here so they're only compiled once
-    findPartialsRE: null, // TODO,
-    findPartialsWithStyleModifiersRE: null, // TODO
-    findPartialsWithPatternParametersRE: null, // TODO
+    findPartialsRE: /<%= _.renderPartial\((.*?)\).*?%>/g, // TODO,
+    findPartialsWithStyleModifiersRE: /<%= _.renderPartial\((.*?)\).*?%>/g, // TODO
+    findPartialsWithPatternParametersRE: /<%= _.renderPartial\((.*?)\).*?%>/g, // TODO
     findListItemsRE: /({{#( )?)(list(I|i)tems.)(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)( )?}}/g,
 
     // render it

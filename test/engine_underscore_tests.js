@@ -177,11 +177,8 @@
     },
     'find_pattern_partials finds partials': function(test){
       testFindPartials(test, [
-        "{{> molecules-comment-header}}",
-        "{{>  molecules-comment-header}}",
-        "{{> \n	molecules-comment-header\n}}",
-        "{{>  molecules-weird-spacing     }}",
-        "{{>  molecules-ba_d-cha*rs     }}"
+        "<%= _.renderPartial(deliveryTpl['delivery/delivery-auth-contact-info'], obj) %>",
+        "<%= _.renderPartial(obj.templates['delivery/delivery-freemobile-giftcard'],giftItem)%>"
       ]);
     },
     'find_pattern_partials finds verbose partials': function(test){
@@ -192,35 +189,6 @@
         "{{>atoms-error(message: 'That\'s no moon...')}}",
         "{{> atoms-error(message: 'That\'s no moon...') }}",
         '{{> 00-atoms/00-global/06-test }}'
-      ]);
-    },
-    'find_pattern_partials finds simple partials with parameters': function(test){
-      testFindPartials(test, [
-        "{{> molecules-single-comment(description: 'A life isn\'t like a garden. Perfect moments can be had, but not preserved, except in memory.') }}",
-        '{{> molecules-single-comment(description:"A life is like a \"garden\". Perfect moments can be had, but not preserved, except in memory.") }}'
-      ]);
-    },
-    'find_pattern_partials finds simple partials with style modifiers': function(test){
-      testFindPartials(test, [
-        '{{> molecules-single-comment:foo }}'
-      ]);
-    },
-    'find_pattern_partials finds partials with underscore parameters': function(test){
-      testFindPartials(test, [
-        '{{> atoms-title title="bravo" headingLevel="2" headingSize="bravo" position="left"}}',
-        '{{> atoms-title title="bravo"\n  headingLevel="2"\n  headingSize="bravo"\n  position="left"}}',
-        '{{> atoms-title title="color &nbsp;<span style=\'font-weight:normal\'>midnight blue</span>" headingSize="charlie"}}',
-        '{{> atoms-input label="city" required=true}}',
-        '{{> organisms-product-filter filterData}}',
-        '{{> atoms-input email required=true}}',
-        '{{> molecules-storycard variants.flex }}',
-        '{{> myPartial name=../name }}'
-      ]);
-    },
-
-    'find_pattern_partials finds underscore block partials': function(test){
-      testFindPartials(test, [
-        '{{#> myPartial }}'
       ]);
     }
   };
