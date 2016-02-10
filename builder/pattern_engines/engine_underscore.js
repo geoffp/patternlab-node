@@ -47,11 +47,11 @@
 
     // render it
     renderPattern: function renderPattern(template, data, partials) {
-      if (partials) {
-        _.registerPartial(partials);
-      }
       var compiled = _.template(template);
-      return compiled(data);
+      return compiled(_.extend(data, {
+        _allData: data,
+        _partials: partials
+      }));
     },
 
     // registerPartial: function (oPattern) {

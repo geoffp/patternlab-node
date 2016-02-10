@@ -200,7 +200,9 @@
       //find any listItem blocks that within the pattern, even if there are no partials
       list_item_hunter.process_list_item_partials(currentPattern, patternlab);
 
-      // expand any partials present in this pattern; that is, drill down into the template and replace their calls in this template with rendered results
+      // expand any partials present in this pattern; that is, drill down into
+      // the template and replace their calls in this template with rendered
+      // results
       if (currentPattern.engine.expandPartials && (foundPatternPartials !== null && foundPatternPartials.length > 0)) {
         expandPartials(foundPatternPartials, list_item_hunter, patternlab, currentPattern);
       }

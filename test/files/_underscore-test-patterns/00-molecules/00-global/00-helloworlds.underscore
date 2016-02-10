@@ -1,1 +1,1 @@
-{{> atoms-helloworld}} and {{> atoms-helloworld}}
+<%= _.template(_partials['atoms-helloworld'])(_data) %> and <%= _.template(_partials['atoms-helloworld'])(_data) %>
