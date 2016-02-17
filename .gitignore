@@ -20,3 +20,5 @@ public/styleguide/css/styleguide.css.map
 source/css/style.css.map
 config.json
 config.json.orig
+.idea/
+public/styleguide/
