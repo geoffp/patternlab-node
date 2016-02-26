@@ -96,36 +96,66 @@ gulp.task('cp:css', function(){
 // Styleguide Copy
 gulp.task('cp:styleguide', function(){
   return gulp.src(
-      [ '**/*'],
-      {cwd: path.resolve(paths().source.styleguide)} )
+      ['**/*'],
+      {cwd: path.resolve(paths().source.styleguide)})
       .pipe(gulp.dest(path.resolve(paths().public.styleguide)))
-      .pipe(browserSync.stream());;
+      .pipe(browserSync.stream());
 });
 
-//server and watch tasks
-gulp.task('connect', ['lab'], function(){
+
+// server and watch tasks
+
+// watch task utility functions
+function getSupportedTemplateExtensions() {
+  var engines = require('./builder/pattern_engines/pattern_engines');
+  return engines.getSupportedFileExtensions();
+}
+function getTemplateWatches() {
+  return getSupportedTemplateExtensions().map(function (dotExtension) {
+    return path.resolve(paths().source.patterns, '**/*' + dotExtension);
+  });
+}
+
+gulp.task('connect', ['lab'], function() {
   browserSync.init({
     server: {
       baseDir: path.resolve(paths().public.root)
+    },
+    snippetOptions: {
+      // Ignore all HTML files within the templates folder
+      blacklist: ['/index.html', '/']
+    },
+    notify: {
+      styles: [
+        'display: none',
+        'padding: 15px',
+        'font-family: sans-serif',
+        'position: fixed',
+        'font-size: 1em',
+        'z-index: 9999',
+        'bottom: 0px',
+        'right: 0px',
+        'border-top-left-radius: 5px',
+        'background-color: #1B2032',
+        'opacity: 0.4',
+        'margin: 0',
+        'color: white',
+        'text-align: center'
+      ]
     }
   });
   gulp.watch(path.resolve(paths().source.css, '**/*.css'), ['cp:css']);
 
   gulp.watch(path.resolve(paths().source.styleguide, '**/*.*'), ['cp:styleguide']);
 
-  gulp.watch(
-    [
-      path.resolve(paths().source.patterns, '**/*.mustache'),
-      path.resolve(paths().source.patterns, '**/*.json'),
-      path.resolve(paths().source.data, '*.json'),
-      path.resolve(paths().source.fonts + '/*'),
-      path.resolve(paths().source.images + '/*'),
-      path.resolve(paths().source.data + '*.json'),
-    ],
-    ['lab-pipe'],
-    function () { browserSync.reload(); }
-  );
+  var patternWatches = [
+    path.resolve(paths().source.patterns, '**/*.json'),
+    path.resolve(paths().source.data, '*.json'),
+    path.resolve(paths().source.fonts + '/*'),
+    path.resolve(paths().source.images + '/*')
+  ].concat(getTemplateWatches());
 
+  gulp.watch(patternWatches, ['lab-pipe'], function () { browserSync.reload(); });
 });
 
 //unit test

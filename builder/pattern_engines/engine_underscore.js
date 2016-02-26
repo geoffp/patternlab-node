@@ -1,5 +1,5 @@
 /*
- * handlebars pattern engine for patternlab-node - v0.15.1 - 2015
+ * underscore pattern engine for patternlab-node - v0.15.1 - 2015
  *
  * Geoffrey Pursell, Brian Muenzenmeyer, and the web community.
  * Licensed under the MIT license.
@@ -8,62 +8,73 @@
  *
  */
 
+
 /*
  * ENGINE SUPPORT LEVEL:
  *
- * Full. Partial calls and lineage hunting are supported. Handlebars does not
- * support the mustache-specific syntax extensions, style modifiers and pattern
- * parameters, because their use cases are addressed by the core Handlebars
- * feature set.
+ * Basic. We can't call partials from inside underscore templates yet, but we
+ * can render templates with backing JSON.
  *
  */
 
 (function () {
   "use strict";
 
-  var Handlebars = require('handlebars');
+  var _ = require('underscore');
 
-  var engine_handlebars = {
-    engine: Handlebars,
-    engineName: 'handlebars',
-    engineFileExtension: '.hbs',
+  // extend underscore with partial-ing methods
+  // HANDLESCORE! UNDERBARS!
+  _.mixin({
+    renderPartial: function(partial, data) {
+      var data = data || {};
+      var compiled = _.template(partial);
+      return compiled(data);
+    },
+    assignContext: function(viewModel, data) {
+      return viewModel(data);
+    }
+  });
+
+  var engine_underscore = {
+    engine: _,
+    engineName: 'underscore',
+    engineFileExtension: '.underscore',
 
     // partial expansion is only necessary for Mustache templates that have
     // style modifiers or pattern parameters (I think)
     expandPartials: false,
 
     // regexes, stored here so they're only compiled once
-    findPartialsRE: /{{#?>\s*([\w-\/.]+)(?:.|\s+)*?}}/g,
+    findPartialsRE: /<%= _.renderPartial\((.*?)\).*?%>/g, // TODO,
+    findPartialsWithStyleModifiersRE: /<%= _.renderPartial\((.*?)\).*?%>/g, // TODO
+    findPartialsWithPatternParametersRE: /<%= _.renderPartial\((.*?)\).*?%>/g, // TODO
     findListItemsRE: /({{#( )?)(list(I|i)tems.)(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)( )?}}/g,
 
     // render it
     renderPattern: function renderPattern(template, data, partials) {
-      if (partials) {
-        Handlebars.registerPartial(partials);
-      }
-      var compiled = Handlebars.compile(template);
-      return compiled(data);
+      var compiled = _.template(template);
+      return compiled(_.extend(data, {
+        _allData: data,
+        _partials: partials
+      }));
     },
 
-    registerPartial: function (oPattern) {
-      Handlebars.registerPartial(oPattern.key, oPattern.template);
-    },
+    // registerPartial: function (oPattern) {
+    //   debugger;
+    //   _.registerPartial(oPattern.key, oPattern.template);
+    // },
 
     // find and return any {{> template-name }} within pattern
     findPartials: function findPartials(pattern) {
       var matches = pattern.template.match(this.findPartialsRE);
       return matches;
     },
-    findPartialsWithStyleModifiers: function() {
-      // TODO: make the call to this from oPattern objects conditional on their
-      // being implemented here.
+    findPartialsWithStyleModifiers: function(pattern) {
       return [];
     },
     // returns any patterns that match {{> value(foo:"bar") }} or {{>
     // value:mod(foo:"bar") }} within the pattern
-    findPartialsWithPatternParameters: function() {
-      // TODO: make the call to this from oPattern objects conditional on their
-      // being implemented here.
+    findPartialsWithPatternParameters: function(pattern) {
       return [];
     },
     findListItems: function(pattern) {
@@ -78,5 +89,5 @@
     }
   };
 
-  module.exports = engine_handlebars;
+  module.exports = engine_underscore;
 })();
