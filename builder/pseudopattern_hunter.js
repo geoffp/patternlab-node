@@ -8,13 +8,11 @@
  *
  */
 
-(function () {
 	"use strict";
 
 	var pseudopattern_hunter = function(){
 
 		function findpseudopatterns(currentPattern, patternlab){
-
 			var glob = require('glob'),
 			fs = require('fs-extra'),
 			pa = require('./pattern_assembler'),
@@ -37,9 +35,7 @@
 			});
 
 			if(pseudoPatterns.length > 0){
-
 				for(var i = 0; i < pseudoPatterns.length; i++){
-
 					if(patternlab.config.debug){
 						debugger;
 						console.log('found pseudoPattern variant of ' + currentPattern.key);
@@ -74,7 +70,6 @@
 					pattern_assembler.addPattern(patternVariant, patternlab);
 				}
 			}
-
 		}
 
 		return {
@@ -86,5 +81,3 @@
 	};
 
 	module.exports = pseudopattern_hunter;
-
-}());
