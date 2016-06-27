@@ -99,3 +99,8 @@
 }
 
 /*# sourceMappingURL=styleguide-specific.css.map */
+
+/* temporary hacks to work arouns badness */
+a[data-patternpartial="viewall-atoms-meta"] {
+  display: none;
+}
