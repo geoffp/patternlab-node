@@ -21,10 +21,14 @@
   "use strict";
 
   var _ = require('underscore');
+  var partialRegistry = {};
 
   // extend underscore with partial-ing methods
   // HANDLESCORE! UNDERBARS!
   _.mixin({
+    renderAtomicPartial: function (partialKey, data) {
+      return _.renderPartial(partialRegistry[partialKey], data);
+    },
     renderPartial: function (partial, data) {
       var data = data || {};
       var compiled = _.template(partial);
@@ -45,15 +49,21 @@
     expandPartials: false,
 
     // regexes, stored here so they're only compiled once
-    findPartialsRE: /<%= _.renderPartial\((.*?)\).*?%>/g, // TODO,
+    findPartialsRE: /<%=[ \t]*_\.renderPartial[ \t]*\((?:"([^"].*?)"|'([^'].*?)')/g, // TODO,
     findPartialsWithStyleModifiersRE: /<%= _.renderPartial\((.*?)\).*?%>/g, // TODO
     findPartialsWithPatternParametersRE: /<%= _.renderPartial\((.*?)\).*?%>/g, // TODO
     findListItemsRE: /({{#( )?)(list(I|i)tems.)(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)( )?}}/g,
 
     // render it
     renderPattern: function renderPattern(template, data, partials) {
-      var compiled = _.template(template);
       var renderedHTML;
+      var compiled;
+
+      try {
+        compiled = _.template(template);
+      } catch (e) {
+        console.log('Error compiling template <name unknown until patlab 2.0>:', template);
+      }
 
       // This try-catch is necessary because references to undefined variables
       // in underscore templates are eval()ed directly as javascript, and as
@@ -73,10 +83,9 @@
       return renderedHTML;
     },
 
-    // registerPartial: function (oPattern) {
-    //   debugger;
-    //   _.registerPartial(oPattern.key, oPattern.template);
-    // },
+    registerPartial: function (oPattern) {
+      partialRegistry[oPattern.key] = oPattern.template;
+    },
 
     // find and return any {{> template-name }} within pattern
     findPartials: function findPartials(pattern) {
@@ -100,7 +109,7 @@
     // given a pattern, and a partial string, tease out the "pattern key" and
     // return it.
     findPartialKey: function (partialString) {
-      var partialKey = partialString.replace(this.findPartialsRE, '$1');
+      var partialKey = partialString.replace(this.findPartialsRE, '$1$2');
       return partialKey;
     }
   };
