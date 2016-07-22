@@ -25,17 +25,41 @@
 
   // extend underscore with partial-ing methods
   // HANDLESCORE! UNDERBARS!
+  function addParentContext(data, currentContext) {
+    return Object.assign({}, currentContext, data);
+  }
+
   _.mixin({
-    renderAtomicPartial: function (partialKey, data) {
-      return _.renderPartial(partialRegistry[partialKey], data);
+    renderAtomicPartial: function (partialKey, data, currentContext) {
+      return _.renderPartial(partialRegistry[partialKey], data, currentContext);
     },
-    renderPartial: function (partial, data) {
-      var data = data || {};
-      var compiled = _.template(partial);
+    renderPartial: function (partial, dataIn, currentContext) {
+      var data = dataIn || {};
+      var compiled;
+      if (dataIn && currentContext &&
+          dataIn instanceof Object && currentContext instanceof Object) {
+        data = addParentContext(data, currentContext);
+      }
+
+      compiled = _.template(partial);
+
       return compiled(data);
     },
     assignContext: function (viewModel, data) {
       return viewModel(data);
+    },
+
+    /* eslint-disable no-eval, no-unused-vars */
+    getPath: function (pathString, currentContext, debug) {
+      try {
+        var result = eval('currentContext.' + pathString);
+        if (debug) {
+          console.log("getPath result = ", result);
+        }
+        return result;
+      } catch (e) {
+        return null;
+      }
     }
   });
 
@@ -75,9 +99,11 @@
           _partials: partials
         }));
       } catch (e) {
-        var errorMessage = "WARNING: the underscore template " + template.fileName + " threw an exception; it probably just tried to reference an undefined variable. Is this pattern maybe missing a .json file?";
-        console.log(errorMessage, e);
-        renderedHTML = "<h1>Error in underscore template</h1>" + errorMessage;
+        var errorMessage = "Error in underscore template <name unknown until patlab 2.0>:" + e.toString();
+        console.log(errorMessage);
+        renderedHTML = "<h1>Error in underscore template <name unknown until patlab 2.0></h1><p>" + e.toString() + "</p>";
+        console.log(template);
+        process.exit(0);
       }
 
       return renderedHTML;
