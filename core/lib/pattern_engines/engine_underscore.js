@@ -30,7 +30,7 @@
   }
 
   _.mixin({
-    renderAtomicPartial: function (partialKey, data, currentContext) {
+    renderNamedPartial: function (partialKey, data, currentContext) {
       return _.renderPartial(partialRegistry[partialKey], data, currentContext);
     },
     renderPartial: function (partial, dataIn, currentContext) {
@@ -100,10 +100,10 @@
         }));
       } catch (e) {
         var errorMessage = "Error in underscore template <name unknown until patlab 2.0>:" + e.toString();
-        console.log(errorMessage);
+        // console.log(errorMessage);
         renderedHTML = "<h1>Error in underscore template <name unknown until patlab 2.0></h1><p>" + e.toString() + "</p>";
-        console.log(template);
-        process.exit(0);
+        // console.log(template);
+        // process.exit(0);
       }
 
       return renderedHTML;
